@@ -3,9 +3,11 @@ package com.example.geoquiz;
 public class Question {
     private int mTextResId;
     private boolean mAnswerTrue;
-    public Question(int testResId, boolean answerTrue){
+    private boolean mIsCheater;
+    public Question(int testResId, boolean answerTrue, boolean isCheater){
         mTextResId = testResId;
         mAnswerTrue = answerTrue;
+        mIsCheater = isCheater;
     }
 
     public int getTextResId() {
@@ -22,5 +24,13 @@ public class Question {
 
     public void setAnswerTrue(boolean mAnswerTrue) {
         this.mAnswerTrue = mAnswerTrue;
+    }
+
+    public boolean ismIsCheater() {
+        return mIsCheater;
+    }
+
+    public void setmIsCheater(boolean mIsCheater) {
+        this.mIsCheater = mIsCheater;
     }
 }
