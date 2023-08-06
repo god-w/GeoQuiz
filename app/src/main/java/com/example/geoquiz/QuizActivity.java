@@ -22,11 +22,9 @@ import android.widget.Toast;
 public class QuizActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAB = "QuizActivity";
     private static final String KEY_INDEX = "index";
-    private static final String KEY_ISCHEAT = "isCheat";
     private static final String EXTRA_ANSWER_IS_TRUE =
             "com.bignerdranch.android.geoquiz.answer_is_true";
     private static final String EXTRA_ANSWER_SHOWN = "com.bignerdranch.android.geoquiz.answer_shown";
-    private static final int REQUEST_CODE_CHEAT = 0;
     private Button mTrueButton;
     private Button mFalseButton;
     private double score = 0;
@@ -145,19 +143,6 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         ProhibitAnswerButton();
         Toast.makeText(this,ret+" Score: "+score, Toast.LENGTH_SHORT).show();
     }
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode != Activity.RESULT_OK) {
-//            return;
-//        }
-//        if (requestCode == REQUEST_CODE_CHEAT) {
-//            if (data == null) {
-//                return;
-//            }
-//            mQuestionBank[mCurrentIndex].setmIsCheater(CheatActivity.wasAnswerShown(data));
-//        }
-//    }
     public void ProhibitAnswerButton() {
         mTrueButton.setEnabled(false);
         mFalseButton.setEnabled(false);
