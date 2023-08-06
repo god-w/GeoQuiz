@@ -1,5 +1,9 @@
 package com.example.geoquiz;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,6 +43,8 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         new Question(R.string.question_asia, true, false)
     };
     private int mCurrentIndex = 0;
+
+    private ActivityResultLauncher<Intent> register;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +68,17 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         mPervButton.setOnClickListener(this);
         mCheatButton = (Button) findViewById(R.id.cheat_button);
         mCheatButton.setOnClickListener(this);
+        register = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if(result != null){
+                    Intent intent = result.getData();
+                    if(intent != null && result.getResultCode() == Activity.RESULT_OK){
+                        mQuestionBank[mCurrentIndex].setmIsCheater(intent.getBooleanExtra(EXTRA_ANSWER_SHOWN, false));
+                    }
+                }
+            }
+        });
     }
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -90,7 +107,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.cheat_button:
                 Intent intent = newIntent(QuizActivity.this, mQuestionBank[mCurrentIndex].isAnswerTrue());
-                startActivityForResult(intent, REQUEST_CODE_CHEAT);
+                register.launch(intent);
                 break;
             default:
                 break;
@@ -128,19 +145,19 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         ProhibitAnswerButton();
         Toast.makeText(this,ret+" Score: "+score, Toast.LENGTH_SHORT).show();
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            return;
-        }
-        if (requestCode == REQUEST_CODE_CHEAT) {
-            if (data == null) {
-                return;
-            }
-            mQuestionBank[mCurrentIndex].setmIsCheater(CheatActivity.wasAnswerShown(data));
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode != Activity.RESULT_OK) {
+//            return;
+//        }
+//        if (requestCode == REQUEST_CODE_CHEAT) {
+//            if (data == null) {
+//                return;
+//            }
+//            mQuestionBank[mCurrentIndex].setmIsCheater(CheatActivity.wasAnswerShown(data));
+//        }
+//    }
     public void ProhibitAnswerButton() {
         mTrueButton.setEnabled(false);
         mFalseButton.setEnabled(false);
